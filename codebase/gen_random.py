@@ -26,6 +26,9 @@ def make_random_structures(
 
     position_y = 0
     final_dict = {}
+    
+    plt.figure(figsize=(20,5))
+    
     for feature_size in feature_sizes:
         
         for copy in range(num_copies):
@@ -35,19 +38,33 @@ def make_random_structures(
                 )
             # show(mask)
             
+            
             # generate random numbers in the shape of the mask
             filter_coeffs = (np.random.rand(x,y)-0.5)*x*y+1j*(np.random.rand(x,y)-0.5)*x*y
+            plt.subplot(141)
+            plt.imshow(np.real(filter_coeffs))
             filter_coeffs[mask] = 0
+            
+            plt.subplot(142)
+            plt.imshow(np.real(filter_coeffs))
             # show(np.real(filter_coeffs))
 
             # ifft generates random shapes
             shape = np.abs(np.fft.ifft2(filter_coeffs))
             # show(shape)
             
+            plt.subplot(143)
+            plt.imshow(shape)
+            
             # scale, normalize, and binarize the shapes
             scale = 0.5/np.median(shape) # scale so the median is at 0.5
             normalized_shape = np.clip(shape*scale,0,1)
             binarized_shape = normalized_shape > 0.5
+            
+            plt.subplot(144)
+            plt.imshow(binarized_shape)
+            plt.savefig('examples/presentation.png')
+            quit()
             # show(binarized_shape)
             
             
@@ -96,6 +113,6 @@ if __name__ == '__main__':
     make_random_structures(
         resolution=100,
         shapesize = [2,2],
-        feature_sizes = [1,2,3,4],
+        feature_sizes = [4],
         num_copies = 2
     )
